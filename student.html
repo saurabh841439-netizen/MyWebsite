@@ -1,0 +1,244 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #06152f, #082d63);
+            color: white;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00d9ff;
+            margin-bottom: 35px;
+        }
+
+        .form-box {
+            background: rgba(30, 100, 170, 0.35);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        input {
+            padding: 14px;
+            margin: 8px;
+            width: 25%;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        button {
+            padding: 13px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #00d9ff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px;
+        }
+
+        button:hover {
+            background: #00a8cc;
+        }
+
+        h2 {
+            color: #00d9ff;
+            margin-top: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: rgba(20, 70, 130, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #3978aa;
+        }
+
+        th {
+            background: #087eb5;
+        }
+
+        .delete {
+            background: #ff4d4d;
+        }
+
+        .delete:hover {
+            background: #d93636;
+        }
+
+        .edit {
+            background: #ffaa00;
+        }
+
+        .edit:hover {
+            background: #d98d00;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 35px;
+            color: #00d9ff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Student Management</h1>
+
+    <div class="form-box">
+
+        <input type="text" id="roll" placeholder="Roll Number">
+
+        <input type="text" id="name" placeholder="Student Name">
+
+        <input type="text" id="course" placeholder="Course">
+
+        <br>
+
+        <button onclick="addStudent()">Add Student</button>
+
+    </div>
+
+    <h2>Student List</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Roll No.</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="studentList"></tbody>
+
+    </table>
+
+    <a href="index.html" class="back">← Back to Portfolio</a>
+
+</div>
+
+
+<script>
+
+let students = JSON.parse(localStorage.getItem("students")) || [];
+
+function displayStudents() {
+
+    let list = document.getElementById("studentList");
+
+    list.innerHTML = "";
+
+    students.forEach(function(student, index) {
+
+        list.innerHTML += `
+            <tr>
+                <td>${student.roll}</td>
+                <td>${student.name}</td>
+                <td>${student.course}</td>
+                <td>
+                    <button class="edit" onclick="editStudent(${index})">
+                        Edit
+                    </button>
+
+                    <button class="delete" onclick="deleteStudent(${index})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+
+    });
+}
+
+
+function addStudent() {
+
+    let roll = document.getElementById("roll").value;
+    let name = document.getElementById("name").value;
+    let course = document.getElementById("course").value;
+
+    if (roll === "" || name === "" || course === "") {
+
+        alert("Please fill all details");
+
+        return;
+    }
+
+    students.push({
+        roll: roll,
+        name: name,
+        course: course
+    });
+
+    localStorage.setItem("students", JSON.stringify(students));
+
+    document.getElementById("roll").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("course").value = "";
+
+    displayStudents();
+}
+
+
+function deleteStudent(index) {
+
+    students.splice(index, 1);
+
+    localStorage.setItem("students", JSON.stringify(students));
+
+    displayStudents();
+}
+
+
+function editStudent(index) {
+
+    let student = students[index];
+
+    document.getElementById("roll").value = student.roll;
+    document.getElementById("name").value = student.name;
+    document.getElementById("course").value = student.course;
+
+    students.splice(index, 1);
+
+    localStorage.setItem("students", JSON.stringify(students));
+
+    displayStudents();
+}
+
+
+displayStudents();
+
+</script>
+
+</body>
+</html>
